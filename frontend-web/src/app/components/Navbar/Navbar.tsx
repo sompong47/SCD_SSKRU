@@ -52,7 +52,7 @@ export default function Navbar() {
               
               <div className="absolute left-0 top-full w-48 bg-white shadow-lg border-t-2 border-[#D4AF37] hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="py-2 flex flex-col">
-                  <Link href="#" className="px-5 py-3 text-sm text-[#D4AF37] hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                  <Link href="/sdgs" className="px-5 py-3 text-sm text-[#D4AF37] hover:bg-gray-50 border-b border-gray-100 transition-colors">
                     SDGs SSKRU | 2025
                   </Link>
                   <Link href="#" className="px-5 py-3 text-sm text-[#D4AF37] hover:bg-gray-50 transition-colors">
