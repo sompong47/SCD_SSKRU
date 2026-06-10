@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
@@ -16,11 +17,13 @@ export default function Navbar() {
           
           {/* โลโก้และชื่อเว็บ */}
           <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xs font-bold ${
-              isHome ? 'bg-white text-black' : 'bg-gray-100 text-[#2f9e76]'
-            }`}>
-              โลโก้
-            </div>
+            <Image
+              src="/logo_sskru.jpg"
+              alt="SSKRU Logo"
+              width={150}
+              height={150}
+              className="rounded-full object-cover"
+            />
             <div>
               <h1 className={`font-bold text-lg leading-tight ${isHome ? 'text-white' : 'text-[#2f9e76]'}`}>
                 การพัฒนาที่ยั่งยืน
