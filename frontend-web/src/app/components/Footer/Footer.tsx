@@ -1,4 +1,7 @@
+"use client";
+
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -9,8 +12,15 @@ export default function Footer() {
           {/* ซ้าย: ข้อมูลติดต่อ */}
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black text-[10px] font-bold">
-                โลโก้
+              {/* เปลี่ยนเป็นรูปภาพ logo_sskru.jpg */}
+              <div className="w-10 h-10 relative rounded-full overflow-hidden bg-white flex-shrink-0">
+                <Image
+                  src="/logosisaket.jpg"
+                  alt="SSKRU Logo"
+                  fill
+                  sizes="px"
+                  className="object-cover"
+                />
               </div>
               <div>
                 <h2 className="font-bold text-white text-base">การพัฒนาที่ยั่งยืน</h2>
@@ -36,7 +46,7 @@ export default function Footer() {
               จำนวนผู้ชม : 420
             </div>
 
-            {/* ช่องสำหรับใส่รูป QR Code */}
+            {/* ช่องสำหรับใส่รูป QR Code (คงไว้เป็น Placeholder ให้ก่อน) */}
             <div className="w-24 h-24 bg-white p-1 rounded">
               <div className="w-full h-full bg-gray-200 flex items-center justify-center text-black text-xs">
                 QR Code
