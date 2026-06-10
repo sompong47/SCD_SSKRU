@@ -5,12 +5,12 @@ export default function Home() {
     // ใส่ h-screen เพื่อให้ความสูงเต็มจอพอดี
     <div className="relative w-full h-screen">
       
-      {/* รูปภาพพื้นหลัง (ตอนนี้ใช้สีเทาเป็น Placeholder ไปก่อน เดี๋ยวเราค่อยเอารูปตึก มรภ.ศรีสะเกษ มาใส่) */}
+      {/* รูปภาพพื้นหลัง (ดึงรูป sskru_bg.jpg จากโฟลเดอร์ public มาแสดง) */}
       <div 
         className="absolute inset-0 bg-gray-800 bg-cover bg-center z-0"
-        // style={{ backgroundImage: "url('/hero-bg.jpg')" }} <--- ถ้ามีรูปแล้วให้ลบ // ข้างหน้าออก
+        style={{ backgroundImage: "url('/sskru_bg.jpg')" }} 
       >
-        {/* ฟิลเตอร์สีดำบางๆ ทับรูปภาพ เพื่อให้ตัวหนังสือโดดเด่นขึ้น */}
+        {/* ฟิลเตอร์สีดำบางๆ ทับรูปภาพ เพื่อให้ตัวหนังสือโดดเด่นและอ่านง่ายขึ้น */}
         <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
@@ -20,9 +20,9 @@ export default function Home() {
           ภายในปี 2570
         </h1>
         
-        {/* ไอคอนดอกไม้เล็กๆ คั่นกลาง */}
+        {/* ไอคอนดอกไม้เล็กๆ คั่นกลาง ปรับเป็นสีทองให้เข้าธีม */}
         <div className="mb-8">
-           <svg className="w-8 h-8 text-white opacity-80" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M11 19.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.22.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zM15.89 18.52A7.957 7.957 0 0019 12c0-4.08-3.05-7.44-7-7.93v2c0 .55-.45 1-1 1H9v2h4c.55 0 1 .45 1 1v2h2v1.52z"/></svg>
+           <svg className="w-8 h-8 text-[#D4AF37] opacity-90" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M11 19.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.22.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zM15.89 18.52A7.957 7.957 0 0019 12c0-4.08-3.05-7.44-7-7.93v2c0 .55-.45 1-1 1H9v2h4c.55 0 1 .45 1 1v2h2v1.52z"/></svg>
         </div>
 
         <p className="text-xl md:text-3xl max-w-5xl leading-relaxed drop-shadow-md font-medium">

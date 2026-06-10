@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Kanit } from "next/font/google"; // เปลี่ยนมา import Kanit
 import "./globals.css";
-// อิมพอร์ต Navbar และ Footer เข้ามา
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+// ตั้งค่าฟอนต์ Kanit รองรับภาษาไทยและกำหนดน้ำหนักตัวอักษร
+const kanit = Kanit({ 
+  subsets: ["latin", "thai"],
+  weight: ["300", "400", "500", "600", "700"] 
+});
 
 export const metadata: Metadata = {
   title: "ระบบจัดการข่าวสารมหาวิทยาลัย",
@@ -19,16 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th">
-      <body className={inter.className}>
-        {/* วาง Navbar ไว้ด้านบนสุด */}
+      {/* เรียกใช้ฟอนต์ Kanit ที่ body */}
+      <body className={kanit.className}>
         <Navbar />
-        
-        {/* children คือเนื้อหาของแต่ละหน้าที่จะมาแสดงต่อจาก Navbar */}
         <main className="min-h-screen">
           {children}
         </main>
-
-        {/* เพิ่มแท็ก Footer ไว้ด้านล่างสุดตรงนี้ครับ */}
         <Footer />
       </body>
     </html>
