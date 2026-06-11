@@ -24,3 +24,14 @@ Route::apiResource('news', NewsController::class);
 Route::get('/scd/years', [ScdController::class, 'getYears']);
 Route::get('/scd/years/{year}', [ScdController::class, 'getCategoriesByYear']);
 Route::get('/scd/years/{year}/category/{categoryId}', [ScdController::class, 'getDetailContent']);
+// เส้นทางสำหรับ เพิ่ม และ ลบ ปีข้อมูล
+Route::post('/scd/years', [ScdController::class, 'storeYear']);
+Route::delete('/scd/years/{id}', [ScdController::class, 'destroyYear']);
+
+// เส้นทางสำหรับจัดการ เนื้อหา (Contents) ในหน้า Admin
+Route::get('/scd/categories', [ScdController::class, 'getAllCategories']);
+Route::get('/scd/contents', [ScdController::class, 'getAllContents']);
+Route::post('/scd/contents', [ScdController::class, 'storeContent']);
+Route::delete('/scd/contents/{id}', [ScdController::class, 'destroyContent']);
+
+Route::post('/scd/contents/{id}', [ScdController::class, 'updateContent']);
