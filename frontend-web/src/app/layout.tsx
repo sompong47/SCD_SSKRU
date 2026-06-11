@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Kanit } from "next/font/google"; // เปลี่ยนมา import Kanit
 import "./globals.css";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+import ConditionalLayout from "./components/ConditionalLayout";
 
 // ตั้งค่าฟอนต์ Kanit รองรับภาษาไทยและกำหนดน้ำหนักตัวอักษร
 const kanit = Kanit({ 
@@ -24,11 +23,7 @@ export default function RootLayout({
     <html lang="th">
       {/* เรียกใช้ฟอนต์ Kanit ที่ body */}
       <body className={kanit.className}>
-        <Navbar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );

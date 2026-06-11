@@ -29,7 +29,7 @@ export default function Login() {
       alert('เข้าสู่ระบบสำเร็จ!');
       router.push('/'); // ย้ายกลับไปหน้าแรก
 
-    } catch (err: any) {
+    } catch (err) {
       setError('อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
     }
   };
