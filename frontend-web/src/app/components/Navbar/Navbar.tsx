@@ -22,6 +22,7 @@ export default function Navbar() {
               width={150}
               height={150}
               className="rounded-full object-cover"
+              style={{ width: "auto", height: "auto" }}
             />
             <div>
               <h1 className={`font-bold text-lg leading-tight ${isHome ? 'text-white' : 'text-[#D4AF37]'}`}>

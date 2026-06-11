@@ -26,8 +26,10 @@ export default function Login() {
       // ถ้าสำเร็จ เก็บ Token ไว้ใน localStorage
       localStorage.setItem('token', response.data.access_token);
       
-      alert('เข้าสู่ระบบสำเร็จ!');
-      router.push('/'); // ย้ายกลับไปหน้าแรก
+      alert('เข้าสู่ระบบผู้ดูแลระบบสำเร็จ!');
+      
+      // 🟢 แก้ไขตรงนี้: บังคับให้เด้งเข้าหน้าระบบจัดการ (Admin) ทันที
+      window.location.href = '/admin';
 
     } catch (err: any) {
       setError('อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
@@ -89,7 +91,7 @@ export default function Login() {
             </div>
 
             <h2 className="text-2xl font-bold text-gray-800 mb-8 text-center">
-              เข้าสู่ระบบสมาชิก
+              เข้าสู่ระบบสำหรับผู้ดูแลระบบ
             </h2>
             
             {/* แสดงข้อความ Error ถ้ามี */}
@@ -108,16 +110,13 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/50 focus:border-[#D4AF37] transition text-sm"
-                  placeholder="example@email.com"
+                  placeholder="admin@sskru.ac.th"
                 />
               </div>
 
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
                   <label className="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
-                  <Link href="#" className="text-xs text-[#D4AF37] hover:text-[#B8962E] font-medium">
-                    ลืมรหัสผ่าน?
-                  </Link>
                 </div>
                 <input 
                   type="password" 
@@ -139,12 +138,9 @@ export default function Login() {
             </form>
 
             <div className="border-t border-gray-200 mt-8 pt-6 text-center">
-              <p className="text-sm text-gray-600">
-                ยังไม่มีบัญชีผู้ใช้สำหรับระบบจัดการ? {' '}
-                <Link href="/register" className="text-[#D4AF37] hover:text-[#B8962E] font-semibold">
-                  ลงทะเบียน
-                </Link>
-              </p>
+              <Link href="/" className="text-sm text-gray-400 hover:text-[#2f9e76] transition-colors font-medium">
+                ← กลับสู่หน้าเว็บไซต์หลัก
+              </Link>
             </div>
           </div>
 
