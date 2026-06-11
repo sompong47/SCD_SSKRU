@@ -35,3 +35,6 @@ Route::post('/scd/contents', [ScdController::class, 'storeContent']);
 Route::delete('/scd/contents/{id}', [ScdController::class, 'destroyContent']);
 
 Route::post('/scd/contents/{id}', [ScdController::class, 'updateContent']);
+
+Route::get('/about-scd', [\App\Http\Controllers\Api\AboutScdController::class, 'index']);
+Route::post('/about-scd', [\App\Http\Controllers\Api\AboutScdController::class, 'update']);
