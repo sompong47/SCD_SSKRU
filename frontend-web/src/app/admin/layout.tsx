@@ -18,7 +18,7 @@ export default function AdminLayout({
 
   // ตรวจสอบ Token ทันทีที่โหลดหน้านี้
   useEffect(() => {
-    const token = localStorage.getItem('token'); // หรือชื่อตัวแปรที่คุณเก็บ token ไว้ในหน้า Login ของคุณ (เช่น 'admin_token')
+    const token = localStorage.getItem('token'); 
     
     if (!token) {
       // ถ้าไม่มี Token ให้เตะกลับไปหน้า Login
@@ -91,6 +91,16 @@ export default function AdminLayout({
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
             จัดการเนื้อหา (Contents)
           </Link>
+
+          {/* 🟢 เพิ่มเมนูหน้า About SCD เข้ามาใหม่ตรงนี้ครับ */}
+          <Link 
+            href="/admin/about-scd" 
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive('/admin/about-scd') ? 'bg-[#D4AF37] text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            เกี่ยวกับโครงการ (About SCD)
+          </Link>
+
         </nav>
 
         {/* ปุ่มออกจากระบบ */}
