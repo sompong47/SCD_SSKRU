@@ -164,7 +164,7 @@ export default function NewsModal({
             <input
               type="text"
               name="title"
-              defaultValue={currentTitle}
+              value={formData.title}
               onChange={handleChange}
               required
               placeholder="กรอกหัวข้อข่าว"
@@ -178,20 +178,29 @@ export default function NewsModal({
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 หมวดหมู่ <span className="text-red-500">*</span>
               </label>
-              <select
-                name="category_id"
-                defaultValue={currentCatId}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] transition text-sm bg-white"
-              >
-                <option value="">-- เลือกหมวดหมู่ --</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+              {categories.length === 0 ? (
+                <div className="w-full px-4 py-3 border border-red-200 bg-red-50 text-red-600 rounded-xl text-sm flex items-center justify-between">
+                  <span>ไม่มีหมวดหมู่</span>
+                  <a href="/admin/categories" className="underline font-medium hover:text-red-700">
+                    เพิ่มหมวดหมู่
+                  </a>
+                </div>
+              ) : (
+                <select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/40 focus:border-[#D4AF37] transition text-sm bg-white"
+                >
+                  <option value="">-- เลือกหมวดหมู่ --</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -200,7 +209,7 @@ export default function NewsModal({
               <input
                 type="number"
                 name="year"
-                defaultValue={currentYear}
+                value={formData.year}
                 onChange={handleChange}
                 required
                 min={2000}
@@ -217,7 +226,7 @@ export default function NewsModal({
             </label>
             <textarea
               name="detail"
-              defaultValue={currentDetail}
+              value={formData.detail}
               onChange={handleChange}
               required
               rows={5}
@@ -283,7 +292,7 @@ export default function NewsModal({
             <button
               id="news-modal-submit"
               type="submit"
-              disabled={loading}
+              disabled={loading || categories.length === 0}
               className="px-6 py-2.5 text-sm font-medium text-white bg-[#D4AF37] hover:bg-[#B8962E] rounded-full transition-colors shadow-sm disabled:opacity-60 flex items-center gap-2"
             >
               {loading && (
