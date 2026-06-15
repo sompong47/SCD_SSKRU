@@ -40,25 +40,27 @@ Route::post('/scd/contents/{id}', [ScdController::class, 'updateContent']);
 Route::get('/about-scd', [\App\Http\Controllers\Api\AboutScdController::class, 'index']);
 Route::post('/about-scd', [\App\Http\Controllers\Api\AboutScdController::class, 'update']);
 
-// 🟢 API สำหรับจัดการ ข่าว & SDG (ระบบใหม่ล่าสุด)
+// =========================================================================
+// 🟢 API สำหรับจัดการ ข่าว & โครงการ (ระบบใหม่ล่าสุด)
+// =========================================================================
 Route::get('/news', [\App\Http\Controllers\Api\NewsController::class, 'index']);
 Route::post('/news', [\App\Http\Controllers\Api\NewsController::class, 'store']);
 Route::get('/news/{id}', [\App\Http\Controllers\Api\NewsController::class, 'show']);
+Route::delete('/news/{id}', [\App\Http\Controllers\Api\NewsController::class, 'destroy']);
+// อัปเดตดาวให้ข่าว (ประเมินย้อนหลัง)
+Route::post('/news/{id}/rating', [\App\Http\Controllers\Api\NewsController::class, 'updateRating']);
 
-// 🟢 API สำหรับดึงข้อมูล SDG 17 ข้อ
+
+// =========================================================================
+// 🟢 API สำหรับจัดการข้อมูลเป้าหมาย SDG 17 ข้อ
+// =========================================================================
 Route::get('/sdgs', function () {
     return response()->json(\App\Models\Sdg::orderBy('sdg_number')->get());
 });
-// ลบข่าว
-Route::delete('/news/{id}', [\App\Http\Controllers\Api\NewsController::class, 'destroy']);
 
-// อัปเดตดาว SDG
+// อัปเดตดาว SDG (ภาพรวมเป้าหมาย)
 Route::post('/sdgs/{id}/rating', function(\Illuminate\Http\Request $request, $id) {
     $sdg = \App\Models\Sdg::findOrFail($id);
     $sdg->update(['rating' => $request->rating]);
-    return response()->json(['message' => 'อัปเดตเรตติ้งสำเร็จ']);
-
-// อัปเดตดาวให้ข่าว (ประเมินย้อนหลัง)
-// อัปเดตดาวให้ข่าว (ประเมินย้อนหลัง)
-Route::post('/news/{id}/rating', [\App\Http\Controllers\Api\NewsController::class, 'updateRating']);
+    return response()->json(['message' => 'อัปเดตเรตติ้ง SDG สำเร็จ']);
 });
