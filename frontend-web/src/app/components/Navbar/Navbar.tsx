@@ -3,10 +3,26 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === '/';
+
+  // 🟢 State สำหรับเก็บข้อมูลปี
+  const [years, setYears] = useState<any[]>([]);
+
+  // 🟢 ดึงข้อมูลปีจาก API
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/scd/years')
+      .then(res => {
+        // เรียงลำดับปีจากใหม่ไปเก่า
+        const sortedYears = res.data.sort((a: any, b: any) => b.year - a.year);
+        setYears(sortedYears);
+      })
+      .catch(err => console.error("Error fetching years for navbar:", err));
+  }, []);
 
   return (
     <nav className={`absolute top-0 w-full z-50 transition-all duration-300 ${
@@ -21,8 +37,8 @@ export default function Navbar() {
               alt="SSKRU Logo"
               width={150}
               height={150}
-              className="rounded-full object-cover"
-              style={{ width: "auto", height: "auto" }}
+              priority
+              className="rounded-full object-cover w-auto h-auto"
             />
             <div>
               <h1 className={`font-bold text-lg leading-tight ${isHome ? 'text-white' : 'text-[#D4AF37]'}`}>
@@ -42,23 +58,33 @@ export default function Navbar() {
               หน้าแรก
             </Link>
             
-            {/* เมนู SDGs SSKRU + Dropdown */}
+            {/* 🟢 เมนู SDGs SSKRU + Dropdown ที่ดึงข้อมูลปีมาแสดง */}
             <div className="relative group h-full flex items-center">
-              <div className={`cursor-pointer flex items-center gap-1 transition-colors ${
-                isHome ? 'hover:text-gray-300' : 'hover:text-[#D4AF37]'
+              <Link href="/sdgs" className={`cursor-pointer flex items-center gap-1 transition-colors ${
+                pathname.includes('/sdgs') ? 'text-[#D4AF37]' : isHome ? 'hover:text-gray-300' : 'hover:text-[#D4AF37]'
               }`}>
                 SDGs SSKRU
                 <svg className="w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </div>
+              </Link>
               
               <div className="absolute left-0 top-full w-48 bg-white shadow-lg border-t-2 border-[#D4AF37] hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="py-2 flex flex-col">
-                  <Link href="/sdgs" className="px-5 py-3 text-sm text-[#D4AF37] hover:bg-gray-50 border-b border-gray-100 transition-colors">
-                    SDGs SSKRU | 2025
-                  </Link>
-                  <Link href="#" className="px-5 py-3 text-sm text-[#D4AF37] hover:bg-gray-50 transition-colors">
-                    SDGs SSKRU | 2024
-                  </Link>
+                  {/* ลูปแสดงปีที่ดึงมาจากฐานข้อมูล */}
+                  {years.length > 0 ? (
+                    years.map((y, index) => (
+                      <Link 
+                        key={y.id} 
+                        href={`/sdgs?year=${y.id}`} // 🟢 ส่ง parameter ปีไปด้วย
+                        className={`px-5 py-3 text-sm text-[#D4AF37] hover:bg-gray-50 transition-colors ${
+                          index !== years.length - 1 ? 'border-b border-gray-100' : ''
+                        }`}
+                      >
+                        SDGs SSKRU | ปี {y.year}
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="px-5 py-3 text-sm text-gray-400">กำลังโหลด...</div>
+                  )}
                 </div>
               </div>
             </div>

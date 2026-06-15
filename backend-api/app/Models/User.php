@@ -24,6 +24,8 @@ class User extends Authenticatable implements JWTSubject // เพิ่ม impl
         'email',
         'password',
         'status', // เพิ่มฟิลด์ status เพื่อให้บันทึกค่าลงฐานข้อมูลได้
+        'is_active',
+        'role',
     ];
 
     /**

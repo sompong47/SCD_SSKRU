@@ -1,135 +1,129 @@
 "use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useState, Suspense } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
 
-export default function SdgGoals() {
-  const years = ['2026', '2025', '2024', '2023', '2022'];
-  const [selectedYear, setSelectedYear] = useState('2026');
+// 🟢 แยก Component ย่อยออกมาเพื่อใช้งาน useSearchParams
+function SdgGridContent() {
+  const searchParams = useSearchParams();
+  const yearFromUrl = searchParams.get('year') || ''; // อ่านค่า ?year=... จาก URL
 
-  const sdgList = [
-    { id: 1, title: 'NO POVERTY', color: 'bg-[#E5243B]', stats: { fund: '580', projects: '31' } },
-    { id: 2, title: 'ZERO HUNGER', color: 'bg-[#DDA63A]', stats: { shop: '16', projects: '28', base: '15' } },
-    { id: 3, title: 'GOOD HEALTH AND WELL-BEING', color: 'bg-[#4C9F38]', stats: { projects: '25', policy: '1' } },
-    { id: 4, title: 'QUALITY EDUCATION', color: 'bg-[#C5192D]', stats: { resources: '9', projects: '13' } },
-    { id: 5, title: 'GENDER EQUALITY', color: 'bg-[#FF3A21]', stats: { projects: '11', policy: '4', center: '6' } },
-    { id: 6, title: 'CLEAN WATER AND SANITATION', color: 'bg-[#26BDE2]', stats: { projects: '-' } },
-    { id: 7, title: 'AFFORDABLE AND CLEAN ENERGY', color: 'bg-[#FCC30B]', stats: { policy: '4', projects: '27' } },
-    { id: 8, title: 'DECENT WORK AND ECONOMIC GROWTH', color: 'bg-[#A21942]', stats: { projects: '-' } },
-    { id: 9, title: 'INDUSTRY, INNOVATION AND INFRASTRUCTURE', color: 'bg-[#FD6925]', stats: { projects: '-' } },
-    { id: 10, title: 'REDUCED INEQUALITIES', color: 'bg-[#DD1367]', stats: { projects: '-' } },
-    { id: 11, title: 'SUSTAINABLE CITIES AND COMMUNITIES', color: 'bg-[#FD9D24]', stats: { projects: '-' } },
-    { id: 12, title: 'RESPONSIBLE CONSUMPTION AND PRODUCTION', color: 'bg-[#C1932E]', stats: { projects: '-' } },
-    { id: 13, title: 'CLIMATE ACTION', color: 'bg-[#3F7E44]', stats: { projects: '-' } },
-    { id: 14, title: 'LIFE BELOW WATER', color: 'bg-[#0A97D9]', stats: { projects: '-' } },
-    { id: 15, title: 'LIFE ON LAND', color: 'bg-[#56C02B]', stats: { projects: '-' } },
-    { id: 16, title: 'PEACE, JUSTICE AND STRONG INSTITUTIONS', color: 'bg-[#00689D]', stats: { projects: '-' } },
-    { id: 17, title: 'PARTNERSHIPS FOR THE GOALS', color: 'bg-[#19486A]', stats: { mou: '25', projects: '23' } },
-  ];
+  const [sdgs, setSdgs] = useState<any[]>([]);
+  const [years, setYears] = useState<any[]>([]);
+  const [newsList, setNewsList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // ตั้งค่าตัวกรองเริ่มต้นให้เท่ากับปีที่มาจาก URL
+  const [filterYear, setFilterYear] = useState<string>(yearFromUrl);
+
+  // 🟢 อัปเดตตัวกรองทันที ถ้าผู้ใช้คลิกเมนู Navbar ซ้ำขณะอยู่ในหน้านี้แล้ว
+  useEffect(() => {
+    setFilterYear(searchParams.get('year') || '');
+  }, [searchParams]);
+
+  useEffect(() => {
+    Promise.all([
+      axios.get('http://localhost:8000/api/sdgs'),
+      axios.get('http://localhost:8000/api/scd/years'),
+      axios.get('http://localhost:8000/api/news')
+    ])
+    .then(([resSdgs, resYears, resNews]) => {
+      setSdgs(resSdgs.data);
+      const sortedYears = resYears.data.sort((a: any, b: any) => b.year - a.year);
+      setYears(sortedYears);
+      setNewsList(resNews.data);
+    })
+    .catch(err => console.error(err))
+    .finally(() => setLoading(false));
+  }, []);
+
+  const getProjectCount = (sdgId: number) => {
+    return newsList.filter(news => {
+      const hasSdg = news.sdgs?.some((s: any) => s.id === sdgId);
+      if (!hasSdg) return false;
+      if (!filterYear) return true;
+      const newsYearId = news.scd_year?.id || news.scdYear?.id || news.scd_year_id;
+      return newsYearId?.toString() === filterYear;
+    }).length;
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-32 pb-20">
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        <div className="w-full h-64 md:h-80 relative rounded-xl overflow-hidden shadow-md border-[6px] border-white bg-gray-200">
-          <Image 
-            src="/sskru_bg.jpg"
-            alt="SSKRU Campus" 
-            fill 
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          <div className="absolute bottom-6 left-6 right-6 text-white text-center md:text-left">
-            <p className="text-[#D4AF37] text-xs md:text-sm font-semibold tracking-wide uppercase mb-1">
-              Si Sa Ket Rajabhat University
-            </p>
-            <h1 className="text-xl md:text-3xl font-bold">
-              Sustainable Development Goals (SDGs)
-            </h1>
-          </div>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-white pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center text-[#D4AF37] text-sm mb-6 flex justify-center items-center gap-2">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-            <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-          </svg>
-          จำนวนผู้ชม : 421
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-medium text-gray-800 mb-2">Sustainable Development Goals (SDGs)</h1>
+          <h2 className="text-gray-500 text-lg">มหาวิทยาลัยราชภัฏศรีสะเกษ และการขับเคลื่อนเป้าหมายการพัฒนาที่ยั่งยืน</h2>
         </div>
 
-        <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#1f2937] mb-3">
-            Sustainable Development Goals (SDGs)
-          </h2>
-          <p className="text-gray-500 text-sm md:text-base max-w-2xl mx-auto">
-            มหาวิทยาลัยราชภัฏศรีสะเกษกับการขับเคลื่อนเป้าหมายการพัฒนาที่ยั่งยืน เพื่อชุมชนท้องถิ่นและสากล
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12 bg-white px-6 py-4 rounded-xl shadow-sm border border-gray-100 max-w-xl mx-auto">
-          <span className="text-sm font-semibold text-gray-700 mr-2">SDG Info :</span>
-          {years.map((year) => (
-            <button
-              key={year}
-              onClick={() => setSelectedYear(year)}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                selectedYear === year
-                  ? 'bg-[#D4AF37] text-white shadow-sm font-bold scale-105'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
+          <span className="text-gray-500 font-medium">SDG Info :</span>
+          <div className="flex flex-wrap justify-center gap-2">
+            {/* 🟢 ปุ่ม "ทั้งหมด" จะทำงานเมื่อ URL ไม่มีปี หรือผู้ใช้กดเคลียร์ */}
+            <Link 
+              href="/sdgs" 
+              className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all shadow-sm ${!filterYear ? 'bg-[#5bc16c] text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
             >
-              {year}
-            </button>
-          ))}
+              ทั้งหมด
+            </Link>
+            
+            {/* 🟢 ปุ่มแยกตามปี ถ้าตรงกับ filterYear จะเปลี่ยนเป็นสีเขียวเข้ม */}
+            {years.map(y => (
+              <Link 
+                key={y.id} 
+                href={`/sdgs?year=${y.id}`} // เปลี่ยน URL เมื่อกดปุ่มปีบนหน้าเว็บ
+                className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all shadow-sm ${filterYear === y.id.toString() ? 'bg-[#5bc16c] text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
+              >
+                {y.year}
+              </Link>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {sdgList.map((sdg) => (
-            <div
-              key={sdg.id}
-              className={`${sdg.color} text-white p-5 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between min-h-[160px] relative overflow-hidden`}
-            >
-              <div className="absolute right-2 bottom-0 text-white/10 font-bold text-8xl pointer-events-none select-none font-mono">
-                {sdg.id}
-              </div>
+        {loading ? (
+          <div className="text-center text-gray-400 py-20 animate-pulse font-medium">กำลังโหลดข้อมูลการดำเนินงาน...</div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+            {sdgs.map(sdg => {
+              const count = getProjectCount(sdg.id);
+              
+              return (
+                <Link 
+                  href={`/sdgs/${sdg.id}`} 
+                  key={sdg.id}
+                  className="group relative block w-full overflow-hidden transition-transform hover:scale-[1.02] hover:z-10 hover:shadow-xl rounded-sm"
+                  style={{ backgroundColor: sdg.color_code }}
+                >
+                  <img 
+                    src={`/sdg-icons/${sdg.sdg_number}.png`} 
+                    alt={`SDG ${sdg.sdg_number}`} 
+                    className="w-full h-auto object-cover relative z-0"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
 
-              <div>
-                <div className="flex items-start gap-2">
-                  <span className="text-2xl font-black border-r border-white/40 pr-2 leading-none">
-                    {sdg.id}
-                  </span>
-                  <h3 className="text-xs font-bold leading-tight tracking-wide uppercase pt-0.5">
-                    {sdg.title}
-                  </h3>
-                </div>
-              </div>
-
-              <div className="mt-6 border-t border-white/20 pt-3 relative z-10">
-                {Object.keys(sdg.stats).length === 1 && sdg.stats.projects === '-' ? (
-                  <div className="flex justify-between items-center text-sm font-medium">
-                    <span>Projects</span>
-                    <span className="text-lg font-bold">-</span>
+                  <div className="absolute top-2 right-3 md:top-3 md:right-4 text-right text-white z-10 drop-shadow-md">
+                    <div className="text-xl md:text-2xl font-bold leading-none">{count}</div>
+                    <div className="text-[10px] md:text-xs font-medium uppercase mt-0.5">Projects</div>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] font-medium opacity-95">
-                    {Object.entries(sdg.stats).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center border-b border-white/10 pb-0.5">
-                        <span className="capitalize">{key}</span>
-                        <span className="text-sm font-bold">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+                  
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
       </div>
     </div>
+  );
+}
+
+// 🟢 Component หลักที่ Export ออกไป (ต้องครอบ Suspense เพื่อป้องกัน Error ของ useSearchParams ใน Next.js)
+export default function SdgGridPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-32 text-center text-gray-500">กำลังโหลด...</div>}>
+      <SdgGridContent />
+    </Suspense>
   );
 }

@@ -9,17 +9,31 @@ class News extends Model
 {
     use HasFactory;
 
+    // 🟢 แก้ไข $fillable ให้ตรงกับชื่อคอลัมน์ในตารางใหม่
     protected $fillable = [
-        'category_id', 
+        'scd_year_id', 
         'title', 
-        'detail', 
-        'picture', 
-        'year'
+        'content', 
+        'cover_image', 
+        'view_count',
+        'rating',
     ];
 
-    // สร้างความสัมพันธ์ ข่าว 1 ข่าว อยู่ใน 1 หมวดหมู่
-    public function category()
+    // 1 ข่าว ผูกได้หลาย SDG (ผ่านตาราง Pivot: news_sdg)
+    public function sdgs()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Sdg::class, 'news_sdg');
+    }
+
+    // 1 ข่าว มีไฟล์แนบ (PDF/Images) ได้หลายไฟล์
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
+    
+    // ผูกกับตารางปี (ScdYear)
+    public function scdYear()
+    {
+        return $this->belongsTo(ScdYear::class, 'scd_year_id');
     }
 }
