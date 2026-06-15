@@ -57,8 +57,11 @@ Route::post('/sdgs/{id}/rating', function(\Illuminate\Http\Request $request, $id
     $sdg = \App\Models\Sdg::findOrFail($id);
     $sdg->update(['rating' => $request->rating]);
     return response()->json(['message' => 'อัปเดตเรตติ้งสำเร็จ']);
+});
 
 // อัปเดตดาวให้ข่าว (ประเมินย้อนหลัง)
-// อัปเดตดาวให้ข่าว (ประเมินย้อนหลัง)
 Route::post('/news/{id}/rating', [\App\Http\Controllers\Api\NewsController::class, 'updateRating']);
-});
+
+// Visitor tracking
+Route::post('/visitors/record', [\App\Http\Controllers\Api\VisitorController::class, 'recordVisit']);
+Route::get('/visitors/count', [\App\Http\Controllers\Api\VisitorController::class, 'getCount']);
