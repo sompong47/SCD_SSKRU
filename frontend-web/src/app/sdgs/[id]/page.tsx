@@ -63,7 +63,7 @@ export default function SdgNewsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {newsList.map(news => (
-              <div key={news.id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 overflow-hidden flex flex-col">
+             <Link href={`/news/${news.id}`} key={news.id} className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col cursor-pointer transform hover:-translate-y-1">
                 
                 {/* รูปปกข่าว */}
                 <div className="w-full aspect-[4/3] relative bg-gray-100">
@@ -103,7 +103,7 @@ export default function SdgNewsPage() {
                   </div>
                 </div>
 
-              </div>
+              </Link>
             ))}
           </div>
         )}

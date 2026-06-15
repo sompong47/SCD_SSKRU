@@ -9,13 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-   {
-       Schema::table('news', function (Blueprint $table) {
-           // 🟢 เพิ่มคอลัมน์เก็บตัวเลขดาว (ค่าเริ่มต้นคือ 0)
-           $table->integer('rating')->default(0)->after('view_count'); 
-       });
-   }
+   public function up()
+    {
+        Schema::table('news', function (Blueprint $table) {
+            // 🟢 เช็คก่อนว่ามีคอลัมน์ rating หรือยัง ถ้ายังไม่มีถึงจะสร้าง
+            if (!Schema::hasColumn('news', 'rating')) {
+                $table->integer('rating')->default(0)->after('view_count');
+            }
+        });
+    }
 
     /**
      * Reverse the migrations.

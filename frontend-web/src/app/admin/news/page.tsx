@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link'; // 🟢 เพิ่ม import Link
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
@@ -9,8 +10,8 @@ export default function ManageNews() {
   const [sdgs, setSdgs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // ตัวแปรฟอร์ม (ถอด rating ออกเรียบร้อย)
-  const [formData, setFormData] = useState({ scd_year_id: '', title: '', content: '' });
+  // 🟢 เพิ่ม external_link ลงใน state formData
+  const [formData, setFormData] = useState({ scd_year_id: '', title: '', content: '', external_link: '' });
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [selectedSdgs, setSelectedSdgs] = useState<number[]>([]);
   const [attachments, setAttachments] = useState<File[]>([]);
@@ -62,6 +63,7 @@ export default function ManageNews() {
       data.append('scd_year_id', formData.scd_year_id);
       data.append('title', formData.title);
       data.append('content', formData.content);
+      data.append('external_link', formData.external_link); // 🟢 ส่งลิงก์ไปด้วย
       
       if (coverImage) data.append('cover_image', coverImage);
       
@@ -75,7 +77,8 @@ export default function ManageNews() {
       alert('บันทึกข่าวสารและโครงการเรียบร้อยแล้ว!');
       fetchData(); 
       
-      setFormData({ scd_year_id: '', title: '', content: '' });
+      // 🟢 เคลียร์ฟอร์มให้ว่างเปล่า
+      setFormData({ scd_year_id: '', title: '', content: '', external_link: '' });
       setSelectedSdgs([]);
       setAttachments([]);
       setCoverImage(null);
@@ -93,7 +96,6 @@ export default function ManageNews() {
     <div className="max-w-7xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">จัดการข่าวสารและโครงการ (News & SDGs)</h1>
 
-      {/* 📝 แบบฟอร์มเพิ่มข่าวใหม่ (แบบคลีน ไม่มีส่วนให้ดาวแล้ว) */}
       <div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-200 mb-8">
         <h2 className="text-lg font-bold mb-6 border-b pb-2 text-[#2f9e76]">📝 แบบฟอร์มเพิ่มข่าว/โครงการใหม่</h2>
         
@@ -115,6 +117,12 @@ export default function ManageNews() {
           <div>
             <label className="block text-sm font-medium mb-1">รายละเอียดเนื้อหาข่าว *</label>
             <textarea required rows={5} value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-[#D4AF37] resize-none" placeholder="พิมพ์เนื้อหาที่นี่..."></textarea>
+          </div>
+
+          {/* 🟢 เพิ่มช่องใส่ลิงก์ */}
+          <div>
+            <label className="block text-sm font-medium mb-1">🔗 ลิงก์อ้างอิง / วิดีโอ (ถ้ามี)</label>
+            <input type="url" value={formData.external_link} onChange={e => setFormData({...formData, external_link: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-[#D4AF37]" placeholder="เช่น https://youtube.com/..." />
           </div>
 
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -149,7 +157,6 @@ export default function ManageNews() {
         </form>
       </div>
 
-      {/* 📊 ตารางแสดงข้อมูลข่าว */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[900px]">
@@ -191,7 +198,6 @@ export default function ManageNews() {
                       </div>
                     </td>
 
-                    {/* 🌟 แสดงจำนวนดาวปัจจุบันที่ได้ประเมินมาจากหน้า sdg-rating */}
                     <td className="px-6 py-4 text-sm text-yellow-500 font-medium">
                       {news.rating ? "⭐".repeat(news.rating) : <span className="text-gray-400 text-xs">ยังไม่ประเมิน</span>}
                     </td>
@@ -200,13 +206,22 @@ export default function ManageNews() {
                       {news.attachments?.length || 0} ไฟล์
                     </td>
 
+                    {/* 🟢 ปรับเปลี่ยนคอลัมน์ จัดการ ให้มีปุ่ม แก้ไข และ ลบ */}
                     <td className="px-6 py-4 text-center">
-                      <button 
-                        onClick={() => handleDelete(news.id)} 
-                        className="text-red-500 hover:bg-red-50 px-3 py-1 rounded transition-colors text-sm font-medium border border-transparent hover:border-red-200"
-                      >
-                        ลบ
-                      </button>
+                      <div className="flex justify-center gap-2">
+                        <Link 
+                          href={`/admin/news/${news.id}/edit`} 
+                          className="text-blue-500 hover:bg-blue-50 px-3 py-1 rounded transition-colors text-sm font-medium border border-transparent hover:border-blue-200"
+                        >
+                          แก้ไข
+                        </Link>
+                        <button 
+                          onClick={() => handleDelete(news.id)} 
+                          className="text-red-500 hover:bg-red-50 px-3 py-1 rounded transition-colors text-sm font-medium border border-transparent hover:border-red-200"
+                        >
+                          ลบ
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

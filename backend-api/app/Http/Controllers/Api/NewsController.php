@@ -122,4 +122,41 @@ class NewsController extends Controller
 
         return response()->json(['message' => 'อัปเดตเรตติ้งสำเร็จ', 'data' => $news]);
     }
+
+    // 🟢 ฟังก์ชันแก้ไข/อัปเดตข่าว
+ public function update(Request $request, $id)
+ {
+     $news = News::findOrFail($id);
+
+     // อัปเดตข้อมูลตัวหนังสือ
+     $news->update([
+         'scd_year_id' => $request->scd_year_id ?? $news->scd_year_id,
+         'title' => $request->title ?? $news->title,
+         'content' => $request->content ?? $news->content,
+         'external_link' => $request->external_link ?? $news->external_link,
+     ]);
+
+     // ถ้ามีการอัปโหลดรูปปกใหม่ ให้ทับของเดิม
+     if ($request->hasFile('cover_image')) {
+         $news->update(['cover_image' => $request->file('cover_image')->store('news', 'public')]);
+     }
+
+     // ถ้ามีการเลือก SDG ใหม่ ให้ซิงค์ข้อมูลใหม่ทับของเดิม
+     if ($request->has('sdgs')) {
+         $news->sdgs()->sync($request->sdgs);
+     }
+
+     // ถ้ามีการอัปโหลดอัลบั้ม/ไฟล์แนบ เพิ่มเติม
+     if ($request->hasFile('attachments')) {
+         foreach ($request->file('attachments') as $file) {
+             $news->attachments()->create([
+                 'file_path' => $file->store('attachments', 'public'),
+                 'file_name' => $file->getClientOriginalName(),
+                 'file_type' => $file->getClientMimeType()
+             ]);
+         }
+     }
+
+     return response()->json(['message' => 'อัปเดตข้อมูลสำเร็จ', 'data' => $news]);
+ }
 }

@@ -49,6 +49,8 @@ Route::get('/news/{id}', [\App\Http\Controllers\Api\NewsController::class, 'show
 Route::delete('/news/{id}', [\App\Http\Controllers\Api\NewsController::class, 'destroy']);
 // อัปเดตดาวให้ข่าว (ประเมินย้อนหลัง)
 Route::post('/news/{id}/rating', [\App\Http\Controllers\Api\NewsController::class, 'updateRating']);
+// อัปเดตข้อมูลข่าว (ใช้ POST เพราะมีส่งไฟล์รูปภาพด้วย)
+Route::post('/news/{id}/update', [\App\Http\Controllers\Api\NewsController::class, 'update']);
 
 
 // =========================================================================

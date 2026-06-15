@@ -17,6 +17,7 @@ class News extends Model
         'cover_image', 
         'view_count',
         'rating',
+        'external_link',
     ];
 
     // 1 ข่าว ผูกได้หลาย SDG (ผ่านตาราง Pivot: news_sdg)
